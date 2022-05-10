@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  background-color: coral;
+}
+.image {
+  height: 32px;
+  width: 32px;
+}
+.column {
+  flex:1;
+}
+
+.columnName {
+  flex:6;
+  background-color: green;
+}
+
+.columnLogo {
+  flex:1;
+  justify-content: center;
+  align-items: center;
+}
+
+.name {
+  background-color: lightpink;
+}
