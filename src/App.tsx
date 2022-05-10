@@ -1,7 +1,13 @@
-import './App.css';
+import "./App.css";
 import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
+
 //import CustomImage from './Components/CustomImage';
-import TeamRow from './Components/TeamRow/TeamRow';
+import TeamRow from "./Components/TeamRow/TeamRow";
+import { useEffect, useState } from "react";
+
+// Import the functions you need from the SDKs you need
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -14,11 +20,14 @@ const firebaseConfig = {
   storageBucket: "gappnadero-pwa.appspot.com",
   messagingSenderId: "544904643491",
   appId: "1:544904643491:web:d60b31d8dc598824fa1016",
-  measurementId: "G-04MWNQQY8P"
+  measurementId: "G-04MWNQQY8P",
 };
 
-// Initialize Firebase
-initializeApp(firebaseConfig);
+const defaultApp = initializeApp(firebaseConfig);
+
+const db = getFirestore(defaultApp);
+
+console.log("defaultApp.name", defaultApp.name); // '[DEFAULT]'
 
 // type ImageProps = {
 //   id:number,
@@ -26,15 +35,15 @@ initializeApp(firebaseConfig);
 // }
 
 type TeamProps = {
-  position: number,
-  name: string,
-  logo: string,
-  points: number,
-  wonGames: number,
-  tieGames: number,
-  lostMaches: number,
-  differenceGoal: number,
-}
+  position: number;
+  name: string;
+  logo: string;
+  points: number;
+  wonGames: number;
+  tieGames: number;
+  lostMaches: number;
+  differenceGoal: number;
+};
 
 // const imageList:ImageProps[] = [
 //   {
@@ -55,38 +64,69 @@ type TeamProps = {
 //   }
 // ]
 
-const teams:TeamProps[] = [{
-  position:1,
-  name: 'San Fe',
-  logo: 'https://seeklogo.com/images/L/liga-deportiva-universitaria-de-quito-logo-5AB6BC49D8-seeklogo.com.png',
-  points: 12,
-  wonGames: 4,
-  tieGames: 0,
-  lostMaches: 0,
-  differenceGoal: 10,
-},
-{
-  position:2,
-  name: 'Maldonado 2',
-  logo: 'http://assets.stickpng.com/images/584a9b3bb080d7616d298777.png',
-  points: 12,
-  wonGames: 4,
-  tieGames: 0,
-  lostMaches: 0,
-  differenceGoal: 10,
-},
-{
-  position:3,
-  name: 'Cisneros',
-  logo: 'https://logodownload.org/wp-content/uploads/2017/02/manchester-city-fc-logo-escudo-badge.png',
-  points: 0,
-  wonGames: 0,
-  tieGames: 0,
-  lostMaches: 4,
-  differenceGoal: 10,
-}]
+// const burnedTeams: TeamProps[] = [
+//   {
+//     position: 1,
+//     name: "San Fe",
+//     logo: "https://seeklogo.com/images/L/liga-deportiva-universitaria-de-quito-logo-5AB6BC49D8-seeklogo.com.png",
+//     points: 12,
+//     wonGames: 4,
+//     tieGames: 0,
+//     lostMaches: 0,
+//     differenceGoal: 10,
+//   },
+//   {
+//     position: 2,
+//     name: "Maldonado 2",
+//     logo: "http://assets.stickpng.com/images/584a9b3bb080d7616d298777.png",
+//     points: 12,
+//     wonGames: 4,
+//     tieGames: 0,
+//     lostMaches: 0,
+//     differenceGoal: 10,
+//   },
+//   {
+//     position: 3,
+//     name: "Cisneros",
+//     logo: "https://logodownload.org/wp-content/uploads/2017/02/manchester-city-fc-logo-escudo-badge.png",
+//     points: 0,
+//     wonGames: 0,
+//     tieGames: 0,
+//     lostMaches: 4,
+//     differenceGoal: 10,
+//   },
+// ];
 
 function App() {
+  console.log("defaultApp.name", defaultApp.name); // '[DEFAULT]'
+
+  const [teams, setTeams] = useState<TeamProps[]>();
+
+  const getData = async (collectionName: string) => {
+    const querySnapshot = await getDocs(collection(db, collectionName));
+    let tempTeams:TeamProps[] = [];
+    querySnapshot.forEach((doc) => {
+      console.log(`${doc.id} => ${doc.data()}`);
+      console.log("doc.data()", doc.data());
+      const tempTeam:TeamProps = {
+        position: doc.data().posicion,
+    name: doc.data().nombre,
+    logo: doc.data().logo,
+    points: doc.data().puntos,
+    wonGames: doc.data().partidosGanados,
+    tieGames: doc.data().partidosEmpatados,
+    lostMaches: doc.data().partidosPerdidos,
+    differenceGoal: doc.data().golDiferencia,
+      }
+      tempTeams.push(tempTeam)
+    });
+    setTeams(tempTeams);
+  };
+
+  useEffect(()=>{
+    getData('equipos')
+  }, [])
+
   return (
     // <div className="App">
     //   <header className="App-header">
@@ -109,7 +149,7 @@ function App() {
     //     } */}
     //     {
     //       teams.map(item =>
-    //         <TeamRow 
+    //         <TeamRow
     //         name={item.name}
     //         logo={item.name}
     //         points={item.points}
@@ -123,9 +163,11 @@ function App() {
     //   </header>
     // </div>
     <div>
-      {
-          teams.map(item =>
-            <TeamRow
+      <div>{defaultApp.name}</div>
+      <div>{db.type}</div>
+      {teams &&
+        teams.map((item) => (
+          <TeamRow
             position={item.position}
             name={item.name}
             logo={item.logo}
@@ -134,9 +176,8 @@ function App() {
             tieGames={item.tieGames}
             lostMaches={item.lostMaches}
             differenceGoal={item.differenceGoal}
-            />
-            )
-        }
+          />
+        ))}
     </div>
   );
 }
