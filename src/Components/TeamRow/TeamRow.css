@@ -12,8 +12,7 @@
 }
 
 .columnName {
-  flex:6;
-  background-color: green;
+  flex:2;
 }
 
 .columnLogo {
@@ -24,4 +23,16 @@
 
 .name {
   background-color: lightpink;
+}
+.rowContainer{
+  padding:10px;
+  margin:10px;
+}
+.row {
+
+  background-color: #bdadd4;
+  border-color: #463169;
+  border-width: 2px;
+  border-radius: 20px;
+
 }

@@ -1,11 +1,18 @@
+
 import './TeamRow.css';
+import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+
 type TeamProps = {
   position: number,
   name: string,
   logo: string,
   points: number,
-  wonGames: number,
-  tieGames: number,
+  wonMatches: number,
+  tieMatches: number,
   lostMaches: number,
   differenceGoal: number,
 }
@@ -14,39 +21,43 @@ function TeamRow({
   name,
   logo,
   points,
-  wonGames,
-  tieGames,
+  wonMatches,
+  tieMatches,
   lostMaches,
   differenceGoal,
 }:TeamProps) {
   return (
-    <div className="container">
-      <div className="column">
-       <p>{position}</p>
-      </div>
-       <div className="columnName">
-        <p className='name'>{name}</p>
-      </div>
-      <div className="column">
-      <img src={logo} className="image" alt="logo" />
-      </div>
-      <div className="column">
-       <p>{points}</p>
-      </div>
-      <div className="column">
-       <p>{wonGames}</p>
-      </div>
-      <div className="column">
-       <p>{tieGames}</p>
-      </div>
-      <div className="column">
-       <p>{lostMaches}</p>
-      </div>
-      <div className="column">
-       <p>{differenceGoal}</p>
-      </div>
+    <div className='rowContainer'>
+    <ListItem alignItems="flex-start" className='row'>
+     <ListItemText className={'column'}
+        primary={position}
+      />
+      <ListItemAvatar>
+        <Avatar alt="Remy Sharp" src={logo} />
+      </ListItemAvatar>
+       <ListItemText className={'columnName'}
+        primary={name}
+      />
+       <ListItemText className={'column'}
+        primary={points}
+      />
+       <ListItemText className={'column'}
+        primary={wonMatches}
+      />
+       <ListItemText className={'column'}
+        primary={tieMatches}
+      />
+       <ListItemText className={'column'}
+        primary={lostMaches}
+      />
+       <ListItemText className={'column'}
+        primary={differenceGoal}
+      />
+    </ListItem>
+    <Divider variant="inset" component="li" />
     </div>
-  );
+);
+  
 }
 
 export default TeamRow;
