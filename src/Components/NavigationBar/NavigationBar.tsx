@@ -1,5 +1,6 @@
 
 import { BottomNavigation, BottomNavigationAction, Button } from '@mui/material';
+import Paper from '@mui/material/Paper';
 import './NavigationBar.css';
 import RestoreIcon from "@mui/icons-material/Receipt";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -17,7 +18,7 @@ const NavigationBar = ({
   return (
     <div>
     <Button variant="contained">Contained</Button>
-
+    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
     <BottomNavigation
       showLabels
       value={navigationValue}
@@ -29,6 +30,7 @@ const NavigationBar = ({
       <BottomNavigationAction label="Calendar" icon={<FavoriteIcon />} />
       <BottomNavigationAction label="Sponsors" icon={<LocationOnIcon />} />
     </BottomNavigation>
+      </Paper>
   </div>
 );
   
