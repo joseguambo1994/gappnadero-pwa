@@ -1,10 +1,11 @@
 
 import './TeamRow.css';
-import ListItem from '@mui/material/ListItem';
+//import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
+import { ListItemButton } from '@mui/material';
 
 type TeamProps = {
   position: number,
@@ -28,7 +29,11 @@ function TeamRow({
 }:TeamProps) {
   return (
     <div className='rowContainer'>
-    <ListItem alignItems="flex-start" className='row'>
+    <ListItemButton  
+           sx={{
+            color: 'success.main',
+          }}
+    alignItems="flex-start" className='row'>
      <ListItemText className={'column'}
         primary={position}
       />
@@ -53,9 +58,35 @@ function TeamRow({
        <ListItemText className={'column'}
         primary={differenceGoal}
       />
-    </ListItem>
+    </ListItemButton >
     <Divider variant="inset" component="li" />
+
+
+    {/* <div className={'column'}>
+      <p>{position}</p>
     </div>
+    <div className={'columnName'}>
+      <p>{name}</p>
+    </div>
+    <div className={'column'}>
+      <img src={logo} className={'image'}/>
+    </div>
+    <div className={'column'}>
+      <p>{points}</p>
+    </div>
+    <div className={'column'}>
+      <p>{wonMatches}</p>
+    </div>
+    <div className={'column'}>
+      <p>{tieMatches}</p>
+    </div>
+    <div className={'column'}>
+      <p>{lostMaches}</p>
+    </div>
+    <div className={'column'}>
+      <p>{differenceGoal}</p>
+    </div>*/}
+    </div> 
 );
   
 }

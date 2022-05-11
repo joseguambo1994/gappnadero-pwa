@@ -9,6 +9,8 @@
 }
 .column {
   flex:1;
+  background-color: 'green';
+  margin:10px;
 }
 
 .columnName {
@@ -25,14 +27,15 @@
   background-color: lightpink;
 }
 .rowContainer{
+  flex:1;
+  flex-direction: row;
+  background-color: 'pink';
   padding:10px;
   margin:10px;
 }
 .row {
-
-  background-color: #bdadd4;
-  border-color: #463169;
-  border-width: 2px;
+  border: 2px;
+  border-color: red;
   border-radius: 20px;
 
 }

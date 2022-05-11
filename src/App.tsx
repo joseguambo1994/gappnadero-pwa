@@ -6,6 +6,7 @@ import { collection, getDocs } from "firebase/firestore";
 //import CustomImage from './Components/CustomImage';
 import TeamRow from "./Components/TeamRow/TeamRow";
 import { useEffect, useState } from "react";
+import Button from '@mui/material/Button';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -169,7 +170,9 @@ function App() {
     //     }
     //   </header>
     // </div>
+    
     <div>
+      <Button variant="contained">Contained</Button>
       <div>{defaultApp.name}</div>
       <div>{db.type}</div>
       <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
