@@ -31,9 +31,10 @@ function TeamRow({
     <div className='rowContainer'>
     <ListItemButton  
            sx={{
-            color: 'success.main',
+            color: 'red',
           }}
-    alignItems="flex-start" className='row'>
+    alignItems="center" className='row'
+    >
      <ListItemText className={'column'}
         primary={position}
       />
