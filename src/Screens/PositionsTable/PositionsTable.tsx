@@ -1,11 +1,11 @@
 
 import './PositionsTable.css';
-import { List } from '@mui/material';
 import { useEffect, useState } from 'react';
-import TeamRow from '../../Components/TeamRow/TeamRow';
 
 import { collection, getDocs } from "firebase/firestore";
 import { db } from '../../App';
+import TeamRow2 from '../../Components/TeamRow2/TeamRow2';
+import Row from '../../Components/Row';
 
 type TeamProps = {
   position: number,
@@ -51,7 +51,7 @@ const PositionsTable = () => {
 
   return (
    <>
-    <List sx={{ width: "100%", bgcolor: "background.paper" }}>
+    {/* <List sx={{ width: "100%", bgcolor: "background.paper" }}>
         {teams &&
           teams.map((item) => (
             <TeamRow
@@ -65,8 +65,40 @@ const PositionsTable = () => {
               differenceGoal={item.differenceGoal}
             />
           ))}
-      </List>
-   </>
+      </List> */}
+
+{
+      teams && teams.map(item=>(
+        <Row
+              position={item.position}
+              name={item.name}
+              logo={item.logo}
+              points={item.points}
+              wonMatches={item.wonMatches}
+              tieMatches={item.tieMatches}
+              lostMaches={item.lostMaches}
+              differenceGoal={item.differenceGoal}
+            />
+      ))
+    }
+    {
+      teams && teams.map(item=>(
+        <TeamRow2
+              position={item.position}
+              name={item.name}
+              logo={item.logo}
+              points={item.points}
+              wonMatches={item.wonMatches}
+              tieMatches={item.tieMatches}
+              lostMaches={item.lostMaches}
+              differenceGoal={item.differenceGoal}
+            />
+      ))
+    }
+    
+    
+    
+       </>
      
 );
   
