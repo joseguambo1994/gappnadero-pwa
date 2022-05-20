@@ -44,14 +44,8 @@ export type ScreensProps = {
 
 function App() {
   const [navigationValue, setNavigationValue] = useState<number>(0);
-
-  console.log("navigationValue in App.tsx: ", navigationValue)
-  console.log(" typeof navigationValue in App.tsx: ", typeof navigationValue)
   return (
     <>
-        <div>{defaultApp.name}</div>
-    <div>{db.type}</div>
-
       {
         (navigationValue === 0) && (<PositionsTable />)
       }
