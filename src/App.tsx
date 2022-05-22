@@ -1,16 +1,16 @@
 import "./App.css";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-
 import PositionsTable from "./Screens/PositionsTable/PositionsTable";
 import NavigationBar from "./Components/NavigationBar/NavigationBar";
 import Calendar from "./Screens/Calendar/Calendar";
+import Splash from "./Screens/Splash/Splash";
 
 // Import the functions you need from the SDKs you need
 // TODO: Add SDKs for Firebase products that you want to use
@@ -34,7 +34,7 @@ export const db = getFirestore(defaultApp);
 
 export type ScreensProps = {
   name: string;
-}
+};
 
 // const screensNames = [
 //   'PositionsTable',
@@ -44,18 +44,34 @@ export type ScreensProps = {
 
 function App() {
   const [navigationValue, setNavigationValue] = useState<number>(0);
+  const [showSplashScreen, setShowSplashScreen] = useState<boolean>(true);
+  const [count, setCount] = useState(0);
+  const [countInTimeout, setCountInTimeout] = useState(0);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log('This will run after 5 second!')
+      setShowSplashScreen(false)
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+  
   return (
     <>
-      {
-        (navigationValue === 0) && (<PositionsTable />)
-      }
-      {
-        (navigationValue === 1) && (<Calendar />)
-      }
-      <NavigationBar 
-      navigationValue={navigationValue}
-      onChange={setNavigationValue}
-      />
+      {showSplashScreen ? (
+        <>
+          <Splash />
+        </>
+      ) : (
+        <>
+          {navigationValue === 0 && <PositionsTable />}
+          {navigationValue === 1 && <Calendar />}
+          <NavigationBar
+            navigationValue={navigationValue}
+            onChange={setNavigationValue}
+          />
+        </>
+      )}
     </>
   );
 }
