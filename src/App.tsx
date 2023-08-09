@@ -1,24 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Route, Routes } from 'react-router-dom';
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+import CowList from './Pages/CowList';
+import CowDetail from './Pages/CowDetail';
+import BottomNavigator from './Components/BottomNavigator';
+import { ReactQueryDevtools } from 'react-query/devtools'
+import {
+  QueryClient,
+  QueryClientProvider,
+} from 'react-query'
+
+
+const queryClient = new QueryClient()
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+       <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
+
+      <Routes>
+        <Route path="/" element={<CowList />} />
+        <Route path="/cowList" element={<CowList />} />
+        <Route path="/cowDetail" element={<CowDetail />} />
+      </Routes>
+      <BottomNavigator />
+      </QueryClientProvider>
     </div>
   );
 }
