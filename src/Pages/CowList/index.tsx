@@ -2,24 +2,41 @@ import './styles.css';
 import {
   useQuery
 } from 'react-query'
-import { collection, getDocs } from "firebase/firestore";
+import { Timestamp, collection, getDocs } from "firebase/firestore";
 import { db } from '../../firebase';
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Typography } from '@mui/material';
-import { Person } from '@mui/icons-material';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, IconButton, Typography } from '@mui/material';
+import { Edit, Person } from '@mui/icons-material';
 import Lottie from "lottie-react";
 import Loading from "./loadingCow.json";
+import { useNavigate } from 'react-router-dom';
 
-// interface ICow {
-//   arrivedAt: Timestamp,
-//   image: string,
-//   name: string,
-//   number: string,
-//   weight: number,
-// }
+
+interface ICow {
+  id: string,
+  arrivedAt: Timestamp,
+  image: string,
+  name: string,
+  number: string,
+  weight: number,
+}
 const CowList = () => {
+
+  const navigate = useNavigate();
+
   const getCattle = async () => {
     const querySnapshot = await getDocs(collection(db, "cattle"));
-    return querySnapshot.docs.map(doc => doc.data());
+    const cows = querySnapshot.docs.map(doc => {
+      const tempCow:ICow = {
+        id: doc.id,
+        arrivedAt: doc.data().arrivedAt,
+        image: doc.data().image,
+        name: doc.data().name,
+        number: doc.data().number,
+        weight: doc.data().weight,
+      }
+      return tempCow
+    });
+    return cows
   }
 
   const { isLoading, error, data } = useQuery('cattle', getCattle)
@@ -58,7 +75,10 @@ const CowList = () => {
             </Box>
 
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails
+      
+          >
+            
             <Typography>
               {'Numero:' + item.number}
             </Typography>
@@ -68,6 +88,16 @@ const CowList = () => {
             <Typography>
               {'Fecha de arribo:' + item.arrivedAt.toDate()}
             </Typography>
+      
+             <Box position={'absolute'} right={0
+            } top={60}>
+           <IconButton onClick={()=>{
+              navigate('/cowDetail', { state: { id: item.id} });
+            }}color="secondary" aria-label="add an alarm">
+              <Edit />
+            </IconButton>
+           </Box>
+           
           </AccordionDetails>
         </Accordion>)
       }
