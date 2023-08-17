@@ -9,6 +9,7 @@ import { Edit, Person } from '@mui/icons-material';
 import Lottie from "lottie-react";
 import Loading from "./loadingCow.json";
 import { useNavigate } from 'react-router-dom';
+import { getPercentageHeat } from '../../Helpers/heat';
 
 
 interface ICow {
@@ -18,6 +19,7 @@ interface ICow {
   name: string,
   number: string,
   weight: number,
+  lastHeat?: Timestamp,
 }
 const CowList = () => {
 
@@ -33,11 +35,25 @@ const CowList = () => {
         name: doc.data().name,
         number: doc.data().number,
         weight: doc.data().weight,
+        lastHeat: doc.data().lastHeat,
       }
       return tempCow
     });
     return cows
   }
+
+  const getPercentageColor = (date?: Date) => {
+    if (!date) return 0
+    return getPercentageHeat(21, new Date(), date)
+  }
+
+  const getColor = (percentage: number): string => {
+    if (percentage < 40) return '#D6FFC1';
+    if (percentage < 60) return '#67FF5A';
+    if (percentage < 80) return '#FDFF5A';
+    return '#FF4545';
+  }
+
 
   const { isLoading, error, data } = useQuery('cattle', getCattle)
 
@@ -61,6 +77,7 @@ const CowList = () => {
             expandIcon={<Person />}
             aria-controls="panel1a-content"
             id="panel1a-header"
+            style={{ background: `linear-gradient(to right, ${getColor(getPercentageColor(item.lastHeat?.toDate()))} ${getPercentageColor(item.lastHeat?.toDate())}%, #FFFFFF ${getPercentageColor(item.lastHeat?.toDate())}% 100%)`}}
 
           >
             <Box sx={{ mr: 2 }} >

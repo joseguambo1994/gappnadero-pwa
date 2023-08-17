@@ -1,10 +1,9 @@
 import { useQuery } from 'react-query';
 import { db } from '../../firebase';
-import './styles.css';
 import { Timestamp, collection, getDocs } from "firebase/firestore";
-import { AccordionSummary, Box, Typography } from '@mui/material';
-import { Flag } from '@mui/icons-material';
-import { format } from 'date-fns'
+import Bottle from './Bottle';
+
+
 
 
 
@@ -30,6 +29,7 @@ const MilkCollection = ({id}: Props)=>{
     return milkCollection
   }
 
+
   const { isLoading, error, data } = useQuery(['milk', id], getMilk)
 
 
@@ -39,20 +39,11 @@ const MilkCollection = ({id}: Props)=>{
 
   return (<div>
   {
-    data?.map(item => <AccordionSummary
-      expandIcon={<Flag />}
+    data?.map(item =>  
 
-    >
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-      >
-         <Typography>{item?.liters}</Typography>
-        <Typography>{format(item?.collectionDate?.toDate(), 'MM/dd/yyyy')}</Typography>
-      </Box>
-
-    </AccordionSummary>)
+     <Bottle width={item.liters} />
+    
+    )
   }
   </div>
   );
