@@ -3,7 +3,7 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import { Paper } from '@mui/material';
 import { Link } from 'react-router-dom';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import { Circle, List } from '@mui/icons-material';
+import { List } from '@mui/icons-material';
 
 
 const   BottomNavigator = ()=>{
@@ -21,14 +21,6 @@ const   BottomNavigator = ()=>{
         label="List"
         value="List"
         icon={<List />}
-    />
-    
-    <BottomNavigationAction
-        component={Link}
-        to="/cowDetail"
-        label="Detail"
-        value="Detail"
-        icon={<Circle />}
     />
       </BottomNavigation>
       </Paper>

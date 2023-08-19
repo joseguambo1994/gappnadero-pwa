@@ -12,6 +12,9 @@ import {
   QueryClient,
   QueryClientProvider,
 } from 'react-query'
+import CowCreate from './Pages/CowCreate';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 
 
 const queryClient = new QueryClient()
@@ -19,7 +22,8 @@ const queryClient = new QueryClient()
 
 function App() {
   return (
-    <div className="container">
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <div className="container">
        <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
 
@@ -27,10 +31,13 @@ function App() {
         <Route path="/" element={<CowList />} />
         <Route path="/cowList" element={<CowList />} />
         <Route path="/cowDetail" element={<CowDetail />} />
+        <Route path="/cowCreate" element={<CowCreate />} />
       </Routes>
       <BottomNavigator />
       </QueryClientProvider>
     </div>
+    </LocalizationProvider>
+    
   );
 }
 

@@ -10,6 +10,7 @@ import AddIcon from '@mui/icons-material/Add';
 import MilkCollection from '../../Components/Milk';
 import { useState } from 'react';
 
+
 const CowDetail = () => {
   const { state } = useLocation();
   const id = state?.id || undefined;
