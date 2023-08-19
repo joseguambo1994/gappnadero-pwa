@@ -9,7 +9,19 @@ import { useLocation } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import MilkCollection from '../../Components/Milk';
 import { useState } from 'react';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale'
 
+
+interface ICow {
+  id: string,
+  arrivedAt: Date,
+image: string,
+name: string,
+number: string,
+weight: number,
+ lastHeat?: Date
+}
 
 const CowDetail = () => {
   const { state } = useLocation();
@@ -24,7 +36,18 @@ const CowDetail = () => {
     if (!id || id === '') return null
     const docRef = doc(db, "cattle", id);
     const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) return docSnap.data()
+    if (docSnap.exists()) {
+      const tempCow:ICow = {
+        id: docSnap.data().id,
+        arrivedAt:  docSnap.data().arrivedAt.toDate(),
+        image:  docSnap.data().image,
+        name:  docSnap.data().name,
+        number:  docSnap.data().number,
+        weight:  docSnap.data().weight,
+        lastHeat: docSnap.data().lastHeat.toDate(),
+      }
+      return tempCow;
+    }
   }
 
   const { isLoading, error, data } = useQuery('cow', getCow)
@@ -63,7 +86,13 @@ const CowDetail = () => {
             {data?.weight}
           </Typography>
         </Typography>
-
+         {
+          data?.lastHeat && <Typography variant='h5'>
+          Fecha de ultimo celo <Typography variant='body1' color="secondary">
+           { format(data.lastHeat, 'MMM/dd/yyyy', {locale: es})}
+          </Typography>
+        </Typography>
+         }
       </CardContent>
 
     </Card>
