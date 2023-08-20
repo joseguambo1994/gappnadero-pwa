@@ -30,7 +30,6 @@ const CowDetail = () => {
   const id = state?.id || undefined;
 
   const camera = useRef<any>(null);
-  const [showCamera, setShowCamera] = useState(false);
   const [image, setImage] = useState();
 
 
@@ -54,13 +53,6 @@ const CowDetail = () => {
       }
       return tempCow;
     }
-  }
-
-  const handleCamera = (e: any) => {
-    console.log("handleCamera", e)
-    // if (camera.current?.takePhoto() !== null){
-    //   setImage(camera.current?.takePhoto())
-    // }
   }
 
   const { isLoading, error, data } = useQuery('cow', getCow)
@@ -111,7 +103,7 @@ const CowDetail = () => {
     </Card>
 
     <Camera errorMessages={{}} ref={camera} />
-      <img src={image} alt='Image preview' />
+      <img src={image} alt='Preview' />
       <button
         onClick={() => {
             const photo = camera.current.takePhoto();
