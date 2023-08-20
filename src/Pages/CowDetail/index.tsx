@@ -8,9 +8,11 @@ import Loading from "./loadingCow.json";
 import { useLocation } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import MilkCollection from '../../Components/Milk';
-import { useState } from 'react';
+import { useState, useRef} from 'react';
 import { format } from 'date-fns';
-import { es } from 'date-fns/locale'
+import { es } from 'date-fns/locale';
+import {Camera} from "react-camera-pro";
+
 
 
 interface ICow {
@@ -26,6 +28,10 @@ weight: number,
 const CowDetail = () => {
   const { state } = useLocation();
   const id = state?.id || undefined;
+
+  const camera = useRef<any>(null);
+  const [showCamera, setShowCamera] = useState(false);
+  const [image, setImage] = useState();
 
 
   const [open, setOpen] = useState(false);
@@ -48,6 +54,13 @@ const CowDetail = () => {
       }
       return tempCow;
     }
+  }
+
+  const handleCamera = (e: any) => {
+    console.log("handleCamera", e)
+    // if (camera.current?.takePhoto() !== null){
+    //   setImage(camera.current?.takePhoto())
+    // }
   }
 
   const { isLoading, error, data } = useQuery('cow', getCow)
@@ -97,6 +110,14 @@ const CowDetail = () => {
 
     </Card>
 
+    <Camera errorMessages={{}} ref={camera} />
+      <img src={image} alt='Image preview' />
+      <button
+        onClick={() => {
+            const photo = camera.current.takePhoto();
+            setImage(photo);
+        }}
+      />
 
     <IconButton onClick={handleOpen} color="secondary" aria-label="add an alarm">
       <AddIcon />
