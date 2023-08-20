@@ -8,7 +8,7 @@ import Loading from "./loadingCow.json";
 import { useLocation } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import MilkCollection from '../../Components/Milk';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale'
 
@@ -31,6 +31,22 @@ const CowDetail = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+
+  const [imageObject, setImageObject] = useState<any>(null);
+
+  const handleFileInput = useRef<any>(null);
+
+  const handleClick = () => {
+    handleFileInput?.current?.click();
+  };
+
+  const handleImageChange = (event:any) => {
+    setImageObject({
+      imagePreview: URL.createObjectURL(event.target.files[0]),
+      imageFile: event.target.files[0],
+    });
+  };
 
   const getCow = async () => {
     if (!id || id === '') return null
@@ -97,6 +113,22 @@ const CowDetail = () => {
 
     </Card>
 
+    <div>
+      <button onClick={handleClick}>Upload Photo</button>
+      <label>
+        <input
+          style={{ display: "none" }}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          ref={handleFileInput}
+          onChange={handleImageChange}
+        />
+      </label>
+      {imageObject && <Box sx={{width:1}}>
+        <img width="100%" height="400" src={imageObject.imagePreview} alt="PreviewImaeg"/>
+        </Box>}
+    </div>
 
     <IconButton onClick={handleOpen} color="secondary" aria-label="add an alarm">
       <AddIcon />
