@@ -10,7 +10,9 @@ import AddIcon from '@mui/icons-material/Add';
 import MilkCollection from '../../Components/Milk';
 import { useState, useRef } from 'react';
 import { format } from 'date-fns';
-import { es } from 'date-fns/locale'
+import { es } from 'date-fns/locale';
+import { getStorage, ref, uploadBytes } from "firebase/storage";
+
 
 
 interface ICow {
@@ -32,19 +34,28 @@ const CowDetail = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  
+
 
   const [imageObject, setImageObject] = useState<any>(null);
 
   const handleFileInput = useRef<any>(null);
+
+  const storage = getStorage();
+const storageRef = ref(storage, `/cattle/${id}/cow`);
 
   const handleClick = () => {
     handleFileInput?.current?.click();
   };
 
   const handleImageChange = (event:any) => {
+    console.log("event.target.files[0]",event.target.files[0])
     setImageObject({
       imagePreview: URL.createObjectURL(event.target.files[0]),
       imageFile: event.target.files[0],
+    });
+    uploadBytes(storageRef, event.target.files[0]).then((snapshot) => {
+      console.log('Uploaded a blob or file!', snapshot);
     });
   };
 
@@ -119,7 +130,7 @@ const CowDetail = () => {
         <input
           style={{ display: "none" }}
           type="file"
-          accept="image/*"
+          accept="image/png"
           capture="environment"
           ref={handleFileInput}
           onChange={handleImageChange}
