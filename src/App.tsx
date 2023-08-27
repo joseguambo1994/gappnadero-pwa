@@ -16,7 +16,7 @@ import CowCreate from './Pages/CowCreate';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import Login from './Pages/Login';
-import { create } from 'zustand'
+import { create } from 'zustand';
 
 
 
@@ -34,10 +34,8 @@ export const userStore = create<UserState>((set) => ({
 }));
 
 function App() {
-  const user = userStore((state) => state.user)
-
-  console.log('App user', user)
-
+  const user = userStore((state) => state.user);
+  
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <div className="container">
