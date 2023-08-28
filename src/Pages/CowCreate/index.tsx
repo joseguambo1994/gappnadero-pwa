@@ -48,7 +48,7 @@ const CowCreate =() => {
   isSuccess && navigate("/cowList")
 
   return (
-    <div>
+    <Box sx={{mt:8, mb:8}}>
       {isLoading ? (
         <Box sx={{
           width: 1,
@@ -120,7 +120,7 @@ const CowCreate =() => {
     </Box>
         </>
       )}
-    </div>
+   </Box>
   
   )
 }
