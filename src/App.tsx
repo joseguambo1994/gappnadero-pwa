@@ -17,8 +17,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import Login from './Pages/Login';
 import { create } from 'zustand';
-
-
+import MenuAppBar from './Components/TopNavigator';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const queryClient = new QueryClient()
 
@@ -27,21 +27,36 @@ interface UserState {
   setUser: (user: string) => void,
   logout:  () => void,
 }
+
+const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#4B8033',
+      },
+      secondary: {
+        main: '#9A5103',
+      },
+    },
+});
+
 export const userStore = create<UserState>((set) => ({
-  user: undefined,
+  user: '',
   setUser: (user) => set(() => ({ user: user })),
-  logout: () => set(() => ({ user: undefined })),
+  logout: () => set(() => ({ user: '' })),
 }));
 
 function App() {
   const user = userStore((state) => state.user);
   
   return (
+    <ThemeProvider theme={theme}>
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <div className="container">
        <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
-
+    {
+      user && user!== '' &&   <MenuAppBar />
+    }
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/cowList" element={<CowList />} />
@@ -50,12 +65,13 @@ function App() {
         <Route path="/login" element={<Login />} />
       </Routes>
       {
-        user && <BottomNavigator />
+        // user && <BottomNavigator />
+        user && user!== '' && <BottomNavigator />
       }
       </QueryClientProvider>
     </div>
     </LocalizationProvider>
-    
+    </ThemeProvider>
   );
 }
 

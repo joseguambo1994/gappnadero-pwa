@@ -18,11 +18,11 @@ import { getStorage, ref, uploadBytes } from "firebase/storage";
 interface ICow {
   id: string,
   arrivedAt: Date,
-image: string,
-name: string,
-number: string,
-weight: number,
- lastHeat?: Date
+  image: string,
+  name: string,
+  number: string,
+  weight: number,
+  lastHeat?: Date
 }
 
 const CowDetail = () => {
@@ -34,7 +34,7 @@ const CowDetail = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  
+
 
 
   const [imageObject, setImageObject] = useState<any>(null);
@@ -42,14 +42,14 @@ const CowDetail = () => {
   const handleFileInput = useRef<any>(null);
 
   const storage = getStorage();
-const storageRef = ref(storage, `/cattle/${id}/cow`);
+  const storageRef = ref(storage, `/cattle/${id}/cow`);
 
   const handleClick = () => {
     handleFileInput?.current?.click();
   };
 
-  const handleImageChange = (event:any) => {
-    console.log("event.target.files[0]",event.target.files[0])
+  const handleImageChange = (event: any) => {
+    console.log("event.target.files[0]", event.target.files[0])
     setImageObject({
       imagePreview: URL.createObjectURL(event.target.files[0]),
       imageFile: event.target.files[0],
@@ -64,13 +64,13 @@ const storageRef = ref(storage, `/cattle/${id}/cow`);
     const docRef = doc(db, "cattle", id);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      const tempCow:ICow = {
+      const tempCow: ICow = {
         id: docSnap.data().id,
-        arrivedAt:  docSnap.data().arrivedAt.toDate(),
-        image:  docSnap.data().image,
-        name:  docSnap.data().name,
-        number:  docSnap.data().number,
-        weight:  docSnap.data().weight,
+        arrivedAt: docSnap.data().arrivedAt.toDate(),
+        image: docSnap.data().image,
+        name: docSnap.data().name,
+        number: docSnap.data().number,
+        weight: docSnap.data().weight,
         lastHeat: docSnap.data().lastHeat.toDate(),
       }
       return tempCow;
@@ -91,80 +91,83 @@ const storageRef = ref(storage, `/cattle/${id}/cow`);
 
   if (error) return <strong>{'An error has occurred: ' + error}</strong>
 
-  return (<>
-    <Card sx={{ width: 1 }}>
-      <CardHeader
-        title={data?.name}
-      />
-      <CardMedia
-        component="img"
-        height="194"
-        image={data?.image}
-        alt={data?.name}
-      />
-      <CardContent>
-        <Typography variant='h5'>
-          Numero: <Typography variant='body1' color="secondary">
-            {data?.number}
-          </Typography>
-        </Typography>
-        <Typography variant='h5'>
-          Peso <Typography variant='body1' color="secondary">
-            {data?.weight}
-          </Typography>
-        </Typography>
-         {
-          data?.lastHeat && <Typography variant='h5'>
-          Fecha de ultimo celo <Typography variant='body1' color="secondary">
-           { format(data.lastHeat, 'MMM/dd/yyyy', {locale: es})}
-          </Typography>
-        </Typography>
-         }
-      </CardContent>
+  return (
+    <Box sx={{ mt: 8, mb: 8 }}>
+      <>
 
-    </Card>
+        <Card sx={{ width: 1 }}>
+          <CardHeader
+            title={data?.name}
+          />
+          <CardMedia
+            component="img"
+            height="194"
+            image={data?.image}
+            alt={data?.name}
+          />
+          <CardContent>
+            <Typography variant='h5'>
+              Numero: <Typography variant='body1' color="secondary">
+                {data?.number}
+              </Typography>
+            </Typography>
+            <Typography variant='h5'>
+              Peso <Typography variant='body1' color="secondary">
+                {data?.weight}
+              </Typography>
+            </Typography>
+            {
+              data?.lastHeat && <Typography variant='h5'>
+                Fecha de ultimo celo <Typography variant='body1' color="secondary">
+                  {format(data.lastHeat, 'MMM/dd/yyyy', { locale: es })}
+                </Typography>
+              </Typography>
+            }
+          </CardContent>
 
-    <div>
-      <button onClick={handleClick}>Upload Photo</button>
-      <label>
-        <input
-          style={{ display: "none" }}
-          type="file"
-          accept="image/png"
-          capture="environment"
-          ref={handleFileInput}
-          onChange={handleImageChange}
-        />
-      </label>
-      {imageObject && <Box sx={{width:1}}>
-        <img width="100%" height="400" src={imageObject.imagePreview} alt="PreviewImaeg"/>
-        </Box>}
-    </div>
+        </Card>
 
-    <IconButton onClick={handleOpen} color="secondary" aria-label="add an alarm">
-      <AddIcon />
-    </IconButton>
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
+        <div>
+          <button onClick={handleClick}>Upload Photo</button>
+          <label>
+            <input
+              style={{ display: "none" }}
+              type="file"
+              accept="image/png"
+              capture="environment"
+              ref={handleFileInput}
+              onChange={handleImageChange}
+            />
+          </label>
+          {imageObject && <Box sx={{ width: 1 }}>
+            <img width="100%" height="400" src={imageObject.imagePreview} alt="PreviewImaeg" />
+          </Box>}
+        </div>
 
-      <Box component="span" display="flex" flexDirection="row" justifyContent="center" alignItems="center">
-        <Box sx={{ width: 'auto', backgroundColor: 'white', p: 10, m: 4, }}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box>
-      </Box>
+        <IconButton onClick={handleOpen} color="secondary" aria-label="add an alarm">
+          <AddIcon />
+        </IconButton>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
 
-    </Modal>
-    <MilkCollection id={id} />
-  </>
+          <Box component="span" display="flex" flexDirection="row" justifyContent="center" alignItems="center">
+            <Box sx={{ width: 'auto', backgroundColor: 'white', p: 10, m: 4, }}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Text in a modal
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+              </Typography>
+            </Box>
+          </Box>
+
+        </Modal>
+        <MilkCollection id={id} />
+      </></Box>
   );
 }
 

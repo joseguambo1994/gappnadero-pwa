@@ -76,7 +76,7 @@ const CowList = () => {
 
   console.log(data, error, isLoading)
   return (
-    <div>
+    <Box sx={{mt:8, mb:8}}>
       <Fab style={ {
     margin: 0,
     top: 'auto',
@@ -144,7 +144,7 @@ onClick={()=>{
         </Accordion>)
       }
       
-    </div>
+    </Box>
   )
 }
 

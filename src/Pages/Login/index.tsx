@@ -4,13 +4,13 @@ import { userStore } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useForm } from 'react-hook-form';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Lottie from "lottie-react";
 import Loading from "./RotatingCow.json";
 import { auth } from '../../firebase';
+import { STORAGE_KEY_PASSWORD, STORAGE_KEY_USER } from '../../constants';
 
 const Login = () => {
-  let inputRef = useRef(false);
   const setUser = userStore((state) => state.setUser);
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
@@ -40,9 +40,8 @@ const Login = () => {
         setUser(tempUser.uid)
         navigate("/cowList")
         console.log(user);
-        localStorage.setItem('@user',user)
-        localStorage.setItem('@password',password)
-
+        localStorage.setItem(STORAGE_KEY_USER,user)
+        localStorage.setItem(STORAGE_KEY_PASSWORD,password)
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -64,24 +63,20 @@ const Login = () => {
         .then((userCredential) => {
           const tempUser = userCredential.user;
           console.log('tempUser', tempUser)
-          localStorage.setItem('@user',storedUser)
-          localStorage.setItem('@password',storedPassword) 
+          localStorage.setItem(STORAGE_KEY_USER,storedUser)
+          localStorage.setItem(STORAGE_KEY_PASSWORD,storedPassword) 
           console.log('signInWithEmailAndPassword then', userCredential)
           setUser(tempUser.uid);
           navigate('/cowList')
         })
         .catch((error) => {
           console.log('error', error)
-
         })
         .finally(()=> setLoading(false))
     }
     setLoading(false)
   }
-    inputRef.current = true;
-    if (inputRef?.current) {
-      getUserCredentials();
-    }
+    getUserCredentials();
   })
 
   if (loading) return  <Box height="100vh" display="flex">
