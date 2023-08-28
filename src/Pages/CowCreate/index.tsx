@@ -8,8 +8,7 @@ import { db } from '../../firebase';
 import { useMutation } from 'react-query';
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
-import Lottie from "lottie-react";
-import Loading from "./loadingCow.json";
+import Loading from '../../Components/Loading';
 
 
 
@@ -48,16 +47,13 @@ const CowCreate =() => {
   isSuccess && navigate("/cowList")
 
   return (
-    <Box sx={{mt:8, mb:8}}>
-      {isLoading ? (
-        <Box sx={{
-          width: 1,
-          height: 1,
-          backgroundColor: 'green'
-        }}
-        >
-          <Lottie animationData={Loading} />
-        </Box>
+ 
+    <Box sx={{mt:8, mb:8, 
+      backgroundColor:'primary.light',
+      height: '100vh',
+    }}
+    >
+      {isLoading ? (<Loading />
       ) : (
         <>
           {isError ? (
@@ -70,7 +66,10 @@ const CowCreate =() => {
 </Link>
           </div> : null}
 
-          <Box sx={{backgroundColor:'white', p:2}}>
+          <Box sx={{ p:2,
+          flex:1,
+          
+          }}>
       
       <TextField sx={{width: 1, mb:2}} label="Nombre" color="secondary"  
       error={errors.name ? true:false}
@@ -121,7 +120,6 @@ const CowCreate =() => {
         </>
       )}
    </Box>
-  
   )
 }
 

@@ -3,8 +3,6 @@ import { db } from '../../firebase';
 import './styles.css';
 import { doc, getDoc } from "firebase/firestore";
 import { Box, Card, CardContent, CardHeader, CardMedia, IconButton, Modal, Typography } from '@mui/material';
-import Lottie from "lottie-react";
-import Loading from "./loadingCow.json";
 import { useLocation } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import MilkCollection from '../../Components/Milk';
@@ -12,6 +10,7 @@ import { useState, useRef } from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { getStorage, ref, uploadBytes } from "firebase/storage";
+import Loading from '../../Components/Loading';
 
 
 
@@ -80,14 +79,7 @@ const CowDetail = () => {
   const { isLoading, error, data } = useQuery('cow', getCow)
 
 
-  if (isLoading) return <Box sx={{
-    width: 1,
-    height: 1,
-    backgroundColor: 'green'
-  }}
-  >
-    <Lottie animationData={Loading} />
-  </Box>
+  if (isLoading) return  <Loading />
 
   if (error) return <strong>{'An error has occurred: ' + error}</strong>
 

@@ -5,13 +5,12 @@ import {
 import { Timestamp, collection, getDocs } from "firebase/firestore";
 import { db } from '../../firebase';
 import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Fab, IconButton, Typography } from '@mui/material';
-import { Add, Edit, Person } from '@mui/icons-material';
-import Lottie from "lottie-react";
-import Loading from "./loadingCow.json";
+import { Add, Edit, ExpandMore } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { getPercentageHeat } from '../../Helpers/heat';
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
+import Loading from '../../Components/Loading';
 
 
 
@@ -63,20 +62,15 @@ const CowList = () => {
 
   const { isLoading, error, data } = useQuery('cattle', getCattle)
 
-  if (isLoading) return <Box sx={{
-    width: 1,
-    height: 1,
-    backgroundColor: 'green'
-  }}
-  >
-    <Lottie animationData={Loading} />
-  </Box>
+  if (isLoading) return <Loading />
 
   if (error) return <strong>{'An error has occurred: ' + error}</strong>
 
   console.log(data, error, isLoading)
   return (
-    <Box sx={{mt:8, mb:8}}>
+    <Box sx={{mt:8, mb:8, p:1,
+    backgroundColor:'primary.light'
+    }}>
       <Fab style={ {
     margin: 0,
     top: 'auto',
@@ -92,13 +86,30 @@ onClick={()=>{
   <Add />
 </Fab>
       {
-        data?.map(item => <Accordion>
+        data?.map(item => <Accordion
+          sx={
+            {            
+              borderRadius:4,
+              mt:1,
+              mb:1,
+            }
+          }
+        >
           <AccordionSummary
-            expandIcon={<Person />}
+            expandIcon={<ExpandMore />}
             aria-controls="panel1a-content"
             id="panel1a-header"
             style={{ background: `linear-gradient(to right, ${getColor(getPercentageColor(item.lastHeat?.toDate()))} ${getPercentageColor(item.lastHeat?.toDate())}%, #FFFFFF ${getPercentageColor(item.lastHeat?.toDate())}% 100%)`}}
+            sx={
+              {
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+                borderBottomLeftRadius: 10,
+                borderBottomRightRadius:10,
+               
+              }
 
+            }
           >
             <Box sx={{ mr: 2 }} >
               <Avatar alt="Remy Sharp" src={item.image} />
@@ -116,7 +127,7 @@ onClick={()=>{
 
           </AccordionSummary>
           <AccordionDetails
-      
+            
           >
             
             <Typography>

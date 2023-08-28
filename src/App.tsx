@@ -32,6 +32,7 @@ const theme = createTheme({
     palette: {
       primary: {
         main: '#4B8033',
+        light: '#e0e0d1'
       },
       secondary: {
         main: '#9A5103',
@@ -56,6 +57,8 @@ function App() {
       <ReactQueryDevtools initialIsOpen={false} />
     {
       user && user!== '' &&   <MenuAppBar />
+      //<MenuAppBar />
+
     }
       <Routes>
         <Route path="/" element={<Login />} />
@@ -65,8 +68,9 @@ function App() {
         <Route path="/login" element={<Login />} />
       </Routes>
       {
-        // user && <BottomNavigator />
         user && user!== '' && <BottomNavigator />
+        //<BottomNavigator />
+
       }
       </QueryClientProvider>
     </div>

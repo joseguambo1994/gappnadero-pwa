@@ -96,7 +96,9 @@ const Login = () => {
 
   return (
     <div>
-      <Box height="100vh" display="flex">
+      <Box height="100vh" display="flex"
+      sx={{backgroundColor:'#e0e0d1'}}
+      >
 
         <Box sx={{
           display: 'flex',
@@ -104,13 +106,13 @@ const Login = () => {
           flexDirection: 'column',
           justifyContent: 'center', 
           alignContent: 'center',
-          backgroundColor: 'white'
-          , p: 1,
+          p: 1,
           
         }}>
 
           <TextField id="userInput" label="Usuario" variant="outlined" color='secondary'
-            sx={{ width: 1, mb: 1 }}
+
+            sx={{ width: 1,mb: 1, bgcolor: 'white' }}
             error={errors.user ? true : false}
             {...register("user", { required: true })}
           />
@@ -119,7 +121,7 @@ const Login = () => {
           <TextField id="passwordInput" label="Contraseña" variant="outlined" color='secondary'
                     type="password"
 
-            sx={{ width: 1, mb: 1 }}
+            sx={{ width: 1, mb: 1,  bgcolor: 'white' }}
             error={errors.password ? true : false}
             {...register("password", { required: true })}
           />
