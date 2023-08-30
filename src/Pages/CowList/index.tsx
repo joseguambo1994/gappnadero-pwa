@@ -4,18 +4,12 @@ import {
 } from 'react-query'
 import { Timestamp, collection, getDocs } from "firebase/firestore";
 import { db } from '../../firebase';
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Fab, IconButton, Typography } from '@mui/material';
-import { Add, Edit, ExpandMore } from '@mui/icons-material';
+import {  Box, Fab,  } from '@mui/material';
+import { Add } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { getPercentageHeat } from '../../Helpers/heat';
-import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
 import Loading from '../../Components/Loading';
-
-
-
-
-
+import CowListItem from '../../Components/CowListItem';
 
 interface ICow {
   id: string,
@@ -59,12 +53,12 @@ const CowList = () => {
     return '#FF4545';
   }
 
-
   const { isLoading, error, data } = useQuery('cattle', getCattle)
 
-  if (isLoading) return <Loading />
 
-  if (error) return <strong>{'An error has occurred: ' + error}</strong>
+   if (isLoading) return <Loading />
+
+   if (error) return <strong>{'An error has occurred: ' + error}</strong>
 
   console.log(data, error, isLoading)
   return (
@@ -86,73 +80,19 @@ onClick={()=>{
   <Add />
 </Fab>
       {
-        data?.map(item => <Accordion
-          sx={
-            {            
-              borderRadius:4,
-              mt:1,
-              mb:1,
-            }
-          }
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMore />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-            style={{ background: `linear-gradient(to right, ${getColor(getPercentageColor(item.lastHeat?.toDate()))} ${getPercentageColor(item.lastHeat?.toDate())}%, #FFFFFF ${getPercentageColor(item.lastHeat?.toDate())}% 100%)`}}
-            sx={
-              {
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 10,
-                borderBottomLeftRadius: 10,
-                borderBottomRightRadius:10,
-               
-              }
-
-            }
-          >
-            <Box sx={{ mr: 2 }} >
-              <Avatar alt="Remy Sharp" src={item.image} />
-            </Box>
-            <Box
-               display="flex"
-               alignItems="center"
-            >
-              <Typography>{item.name}</Typography>
-            </Box>
-            <Box
-            >
-              <Typography>{(getPercentageHeat(21, new Date(), item.lastHeat?.toDate())*21/100).toFixed(0)}</Typography>
-            </Box>
-
-          </AccordionSummary>
-          <AccordionDetails
-            
-          >
-            
-            <Typography>
-              {'Numero:' + item.number}
-            </Typography>
-            <Typography>
-              {'Peso:' + item.weight}
-            </Typography>
-            {
-              item?.lastHeat?.toDate() && <Typography>
-              {'Fecha de ultimo celo:' + format(item.lastHeat.toDate(), 'MMM/dd/yyyy', {locale: es})}
-            </Typography>
-            }
-      
-             <Box position={'absolute'} right={0
-            } top={60}>
-           <IconButton onClick={()=>{
-              navigate('/cowDetail', { state: { id: item.id} });
-            }}color="secondary" aria-label="add an alarm">
-              <Edit />
-            </IconButton>
-           </Box>
-           
-          </AccordionDetails>
-        </Accordion>)
+        data?.map(item => 
+          <CowListItem 
+          id={item.id}
+          image ={item.image}
+          name ={item.name}
+          date={(getPercentageHeat(21, new Date(), item.lastHeat?.toDate())*21/100).toFixed(0)}
+          color={getColor(getPercentageColor(item.lastHeat?.toDate()))}
+          percentage={getPercentageColor(item.lastHeat?.toDate()).toString()}
+          number={item.number}
+          weight={item.weight}
+          lastHeatDate={item?.lastHeat?.toDate()}
+          />
+         )
       }
       
     </Box>
