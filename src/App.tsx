@@ -57,7 +57,6 @@ function App() {
       <ReactQueryDevtools initialIsOpen={false} />
     {
       user && user!== '' &&   <MenuAppBar />
-      //<MenuAppBar />
 
     }
       <Routes>
@@ -69,8 +68,6 @@ function App() {
       </Routes>
       {
         user && user!== '' && <BottomNavigator />
-        //<BottomNavigator />
-
       }
       </QueryClientProvider>
     </div>
