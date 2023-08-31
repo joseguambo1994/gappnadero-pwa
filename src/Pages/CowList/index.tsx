@@ -47,8 +47,7 @@ const CowList = () => {
   }
 
   const getColor = (percentage: number): string => {
-    if (percentage < 40) return '#D6FFC1';
-    if (percentage < 60) return '#67FF5A';
+    if (percentage < 50) return '#67FF5A';
     if (percentage < 80) return '#FDFF5A';
     return '#FF4545';
   }
