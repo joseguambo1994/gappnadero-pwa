@@ -1,4 +1,24 @@
 
-.fill {
-  background: rgb(255, 255, 255);
+.wrapper {
+  border-radius: 20;
+}
+.elementsContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: rgb(136, 209, 136);
+  border-radius: 30;
+  padding: 20;
+  margin:20;
+}
+.image {
+  flex:1
+}
+.nameText {
+  width: 25vw;
+  height: '100%';
+}
+.statusBar {
+  flex: 4;
+  height: '100%';
 }
