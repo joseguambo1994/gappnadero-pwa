@@ -33,8 +33,7 @@ const CowListItem = ({
         backgroundColor: open ? '#dfbf9f' : 'transparent',
         opacity: open ? 1 : 0,
         transform: open ? 'translateX(60px)' : 'translateX(0px)',
-        width: '100%',
-
+        width: '80%',
     })
 
 
