@@ -23,7 +23,7 @@ const CowListItem = ({
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const tempPercentage = Number(percentage) > 99 ? 100 : percentage;
-    console.log({ date }, { number }, { weight }, { lastHeatDate }, { openItem })
+    //console.log({ date }, { number }, { weight }, { lastHeatDate }, { openItem })
     const animationStyle = useSpring({
         width: started ? `${tempPercentage}%` : '0%',
         backgroundColor: color,

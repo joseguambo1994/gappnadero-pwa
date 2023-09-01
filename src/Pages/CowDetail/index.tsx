@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
-import { db } from '../../firebase';
+import { db, storage } from '../../firebase';
 import './styles.css';
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { Box, Card, CardContent, CardHeader, CardMedia, IconButton, Modal, Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
@@ -9,7 +9,7 @@ import MilkCollection from '../../Components/Milk';
 import { useState, useRef } from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, } from "firebase/storage";
 import Loading from '../../Components/Loading';
 
 
@@ -27,35 +27,40 @@ interface ICow {
 const CowDetail = () => {
   const { state } = useLocation();
   const id = state?.id || undefined;
-
-
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-
-
-
   const [imageObject, setImageObject] = useState<any>(null);
-
   const handleFileInput = useRef<any>(null);
-
-  const storage = getStorage();
   const storageRef = ref(storage, `/cattle/${id}/cow`);
 
   const handleClick = () => {
     handleFileInput?.current?.click();
   };
 
-  const handleImageChange = (event: any) => {
+  const handleImageChange = async (event: any) => {
     console.log("event.target.files[0]", event.target.files[0])
     setImageObject({
       imagePreview: URL.createObjectURL(event.target.files[0]),
       imageFile: event.target.files[0],
     });
-    uploadBytes(storageRef, event.target.files[0]).then((snapshot) => {
-      console.log('Uploaded a blob or file!', snapshot);
-    });
+    try {
+      const snapshot = await uploadBytes(storageRef, event.target.files[0]);
+      console.log("uploadBytes snapshot", snapshot);
+      const tempUrl = await getDownloadURL(snapshot.ref);
+      console.log("getDownloadURL tempUrl", tempUrl);
+      const cowRef = doc(db, "cattle", id);
+      const docResponse = await updateDoc(cowRef, {
+        image: tempUrl
+      });
+      console.log("updateDoc docResponse", docResponse);
+    } catch (e) {
+      console.error("The Promise is rejected!", e);
+    } finally {
+      console.log(
+        "The Promise is settled, meaning it has been resolved or rejected."
+      );
+    }
   };
 
   const getCow = async () => {
@@ -94,7 +99,7 @@ const CowDetail = () => {
           <CardMedia
             component="img"
             height="194"
-            image={data?.image}
+            image={imageObject?.imagePreview || data?.image}
             alt={data?.name}
           />
           <CardContent>
@@ -131,9 +136,9 @@ const CowDetail = () => {
               onChange={handleImageChange}
             />
           </label>
-          {imageObject && <Box sx={{ width: 1 }}>
+          {/* {imageObject && <Box sx={{ width: 1 }}>
             <img width="100%" height="400" src={imageObject.imagePreview} alt="PreviewImaeg" />
-          </Box>}
+          </Box>} */}
         </div>
 
         <IconButton onClick={handleOpen} color="secondary" aria-label="add an alarm">
