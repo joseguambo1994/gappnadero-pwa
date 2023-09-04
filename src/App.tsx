@@ -19,6 +19,8 @@ import Login from './Pages/Login';
 import { create } from 'zustand';
 import MenuAppBar from './Components/TopNavigator';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useEffect } from 'react';
+import ProtectedRoute from './Components/ProtectedRoute';
 
 const queryClient = new QueryClient()
 
@@ -36,6 +38,7 @@ const theme = createTheme({
       },
       secondary: {
         main: '#9A5103',
+        light: '#cc9766'
       },
     },
 });
@@ -45,9 +48,25 @@ export const userStore = create<UserState>((set) => ({
   setUser: (user) => set(() => ({ user: user })),
   logout: () => set(() => ({ user: '' })),
 }));
+export interface User {
+  id: string,
+  name: string,
+}
 
-function App() {
+const App = () => {
+  const setUser = userStore((state) => state.setUser);
   const user = userStore((state) => state.user);
+
+  useEffect(()=>{
+    const getUser = ()=> {
+      const storedUser = localStorage.getItem("@accessToken");
+      storedUser &&  setUser(storedUser)
+    }
+    getUser();
+  }, [user, setUser])
+
+
+  console.log('user App.tsx', user)
   
   return (
     <ThemeProvider theme={theme}>
@@ -55,20 +74,25 @@ function App() {
       <div className="container">
        <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
-    {
-      user && user!== '' &&   <MenuAppBar />
+    
+     { user &&  <MenuAppBar />}
 
-    }
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/cowList" element={<CowList />} />
-        <Route path="/cowDetail" element={<CowDetail />} />
-        <Route path="/cowCreate" element={<CowCreate />} />
+        <Route index element={user ? <ProtectedRoute user={user}>
+              <CowList />
+            </ProtectedRoute>: <Login />} />
+        <Route path="/cowList" element={<ProtectedRoute user={user}>
+              <CowList />
+            </ProtectedRoute>} />
+        <Route path="/cowDetail" element={<ProtectedRoute user={user}>
+              <CowDetail />
+            </ProtectedRoute>} />
+        <Route path="/cowCreate" element={<ProtectedRoute user={user}>
+              <CowCreate />
+            </ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
       </Routes>
-      {
-        user && user!== '' && <BottomNavigator />
-      }
+         {user && <BottomNavigator />}
       </QueryClientProvider>
     </div>
     </LocalizationProvider>

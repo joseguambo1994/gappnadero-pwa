@@ -34,8 +34,7 @@ const CowCreate =() => {
   } = useForm<Inputs>({defaultValues})
 
   const createCow = async (formData: Inputs) => {
-    const docRef = await addDoc(collection(db, "cattle"), formData);
-    console.log("Document written with ID: ", docRef.id);
+    await addDoc(collection(db, "cattle"), formData);
   }
   const { isSuccess , isLoading, isError, error, mutate } = useMutation(createCow);
 

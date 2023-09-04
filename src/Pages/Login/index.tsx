@@ -1,20 +1,18 @@
-import { Box, Button, TextField } from '@mui/material';
+import { Alert, Box, Button, Snackbar, TextField } from '@mui/material';
 import './styles.css';
 import { userStore } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
-import Lottie from "lottie-react";
-import Loading from "./RotatingCow.json";
 import { auth } from '../../firebase';
-import { STORAGE_KEY_PASSWORD, STORAGE_KEY_USER } from '../../constants';
+import { STORAGE_KEY_ACCESS_TOKEN } from '../../constants';
+import { useState } from 'react';
 
 const Login = () => {
   const setUser = userStore((state) => state.setUser);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState<boolean>(true);
-
+  const [showError, setShowError] = useState<boolean>(false);
+  
   const {
     register,
     handleSubmit,
@@ -26,73 +24,29 @@ const Login = () => {
     }
   });
 
-  const onSubmit = (data: any, e: any) => {
-    console.log('onSubmit', data, e);
-    onLogin(data.user, data.password);
-  }
-  const onError = (errors: any, e: any) => console.log('onErro', errors, e);
-
-  const onLogin = async (user: string, password: string) => {
-    setLoading(true);
-    await signInWithEmailAndPassword(auth, user, password)
-      .then((userCredential) => {
-        const tempUser = userCredential.user;
-        setUser(tempUser.uid)
+  const login = async (user: string, password: string) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, user, password);
+      if (userCredential?.user?.uid) {
+        localStorage.setItem(STORAGE_KEY_ACCESS_TOKEN, userCredential.user.uid)
+        setUser(userCredential.user.uid)
         navigate("/cowList")
-        console.log(user);
-        localStorage.setItem(STORAGE_KEY_USER,user)
-        localStorage.setItem(STORAGE_KEY_PASSWORD,password)
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage)
-      }).finally(()=>{
-        setLoading(false)
-      });
-  }
-
-
-  useEffect(()=>{ 
-    const getUserCredentials = () => {
-    const storedUser = localStorage.getItem("@user");
-    const storedPassword = localStorage.getItem("@password");
-    console.log('getUserCredentials', storedUser, storedPassword)
-    if (storedUser && storedPassword){
-      signInWithEmailAndPassword(auth, storedUser, storedPassword)
-        .then((userCredential) => {
-          const tempUser = userCredential.user;
-          console.log('tempUser', tempUser)
-          localStorage.setItem(STORAGE_KEY_USER,storedUser)
-          localStorage.setItem(STORAGE_KEY_PASSWORD,storedPassword) 
-          console.log('signInWithEmailAndPassword then', userCredential)
-          setUser(tempUser.uid);
-          navigate('/cowList')
-        })
-        .catch((error) => {
-          console.log('error', error)
-        })
-        .finally(()=> setLoading(false))
+      }
+    } catch (e) {
+      setShowError(true)
     }
-    setLoading(false)
   }
-    getUserCredentials();
-  })
 
-  if (loading) return  <Box height="100vh" display="flex">
-    <Box sx={{
-    display: 'flex',
-    flex: 1, 
-    flexDirection: 'column',
-    justifyContent: 'center', 
-    alignContent: 'center',
-    backgroundColor: 'white'
+  const onSubmit = (data: any, e: any) => {
+    if (data?.user && data?.password) {
+      login(data.user, data.password)
+    }
+  }
+  const onError = (_errors: any, _e: any) => {};
 
-  }}
-  >
-    <Lottie animationData={Loading} />
-  </Box>
-  </Box>
+  const handleClose = () => {
+    setShowError(false);
+};
 
   return (
     <div>
@@ -109,7 +63,13 @@ const Login = () => {
           p: 1,
           
         }}>
-
+         {
+           showError && <Snackbar open={showError} autoHideDuration={2000} onClose={handleClose} >
+           <Alert severity="error" sx={{ width: '100%' }} onClose={handleClose}>
+             Error de autenticacion o credenciales
+           </Alert>
+         </Snackbar>
+         }
           <TextField id="userInput" label="Usuario" variant="outlined" color='secondary'
 
             sx={{ width: 1,mb: 1, bgcolor: 'white' }}

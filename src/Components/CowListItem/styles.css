@@ -21,7 +21,6 @@
 .containerDetails {
   display: flex;
   flex-direction: row;
-  background-color: yellow;
 }
 .image {
   flex:1

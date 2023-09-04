@@ -59,7 +59,6 @@ const CowList = () => {
 
    if (error) return <strong>{'An error has occurred: ' + error}</strong>
 
-  console.log(data, error, isLoading)
   return (
     <Box sx={{mt:8, mb:8, p:1,
     backgroundColor:'primary.light'
@@ -81,6 +80,7 @@ onClick={()=>{
       {
         data?.map(item => 
           <CowListItem 
+          key={item.id}
           id={item.id}
           image ={item.image}
           name ={item.name}
