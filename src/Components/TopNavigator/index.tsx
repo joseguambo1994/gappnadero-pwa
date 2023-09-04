@@ -6,20 +6,23 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
-import { STORAGE_KEY_PASSWORD, STORAGE_KEY_USER } from '../../constants';
+import { STORAGE_KEY_ACCESS_TOKEN } from '../../constants';
 import { userStore } from '../../App';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Avatar, Menu, MenuItem } from '@mui/material';
+import { ArrowBack } from '@mui/icons-material';
 
 const MenuAppBar = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const logout = userStore((state) => state.logout);
   const navigate = useNavigate();
+  const location = useLocation();
 
+  const handleBack = () => {
+    navigate(-1)
+  }
   const handleClose = () => {
-    console.log('handleClose')
-    localStorage.removeItem(STORAGE_KEY_USER);
-    localStorage.removeItem(STORAGE_KEY_PASSWORD);
+    localStorage.removeItem(STORAGE_KEY_ACCESS_TOKEN);
 
     signOut(auth).then(() => {
         navigate('/login')
@@ -32,8 +35,16 @@ const MenuAppBar = () => {
     <Box sx={{ flexGrow: 1,
     }}>
       <AppBar  position="fixed">
-        <Toolbar>
-                      <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Toolbar  sx={{ justifyContent: 'space-between' }}>
+        {
+          location.pathname !== '/cowList' && <IconButton aria-label="Example"
+          onClick={handleBack}
+          >
+                  <ArrowBack sx={{ color: 'white'}} />
+        </IconButton>
+        }
+
+                      <Typography variant="h6" component="div">
             Gappnadero v1.0 
           </Typography>
           {(

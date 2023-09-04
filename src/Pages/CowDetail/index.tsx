@@ -39,27 +39,19 @@ const CowDetail = () => {
   };
 
   const handleImageChange = async (event: any) => {
-    console.log("event.target.files[0]", event.target.files[0])
     setImageObject({
       imagePreview: URL.createObjectURL(event.target.files[0]),
       imageFile: event.target.files[0],
     });
     try {
       const snapshot = await uploadBytes(storageRef, event.target.files[0]);
-      console.log("uploadBytes snapshot", snapshot);
       const tempUrl = await getDownloadURL(snapshot.ref);
-      console.log("getDownloadURL tempUrl", tempUrl);
       const cowRef = doc(db, "cattle", id);
-      const docResponse = await updateDoc(cowRef, {
+      await updateDoc(cowRef, {
         image: tempUrl
       });
-      console.log("updateDoc docResponse", docResponse);
     } catch (e) {
       console.error("The Promise is rejected!", e);
-    } finally {
-      console.log(
-        "The Promise is settled, meaning it has been resolved or rejected."
-      );
     }
   };
 
