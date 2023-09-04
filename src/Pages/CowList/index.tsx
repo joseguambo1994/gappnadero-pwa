@@ -77,7 +77,9 @@ onClick={()=>{
 >
   <Add />
 </Fab>
+        <div style={{overflow:'auto', overscrollBehavior:'auto'}}>
       {
+
         data?.map(item => 
           <CowListItem 
           key={item.id}
@@ -93,6 +95,7 @@ onClick={()=>{
           />
          )
       }
+      </div>
       
     </Box>
   )
