@@ -37,6 +37,8 @@
   }
 }
 
-html {
+
+html, body {
+  overflow: scroll;
   overscroll-behavior: contain;
 }
