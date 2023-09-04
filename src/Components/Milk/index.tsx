@@ -2,6 +2,8 @@ import { useQuery } from 'react-query';
 import { db } from '../../firebase';
 import { Timestamp, collection, getDocs } from "firebase/firestore";
 import Bottle from './Bottle';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 
 
@@ -32,16 +34,17 @@ const MilkCollection = ({id}: Props)=>{
 
   const { isLoading, error, data } = useQuery(['milk', id], getMilk)
 
+  console.log({data})
 
   if (isLoading) return <strong>{'Is Loadinggg ' + error}</strong>
 
   if (error) return <strong>{'An error has occurred: ' + error}</strong>
 
-  return (<div>
+  return (<div >
   {
     data?.map(item =>  
-
-     <Bottle width={item.liters} />
+     <Bottle width={item.liters} collectionDate={format(item.collectionDate.toDate(), 'MMM/dd/yyyy', { locale: es })}
+      />
     
     )
   }

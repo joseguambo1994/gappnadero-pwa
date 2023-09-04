@@ -2,7 +2,7 @@ import { useQuery } from 'react-query';
 import { db, storage } from '../../firebase';
 import './styles.css';
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { Box, Card, CardContent, CardHeader, CardMedia, IconButton, Modal, Typography } from '@mui/material';
+import { Box, Card, CardContent, CardHeader, CardMedia, Fab, IconButton, Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import MilkCollection from '../../Components/Milk';
@@ -11,6 +11,8 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { ref, uploadBytes, getDownloadURL, } from "firebase/storage";
 import Loading from '../../Components/Loading';
+import { Edit } from '@mui/icons-material';
+import MilkForm from '../../Components/MilkForm';
 
 
 
@@ -81,22 +83,43 @@ const CowDetail = () => {
   if (error) return <strong>{'An error has occurred: ' + error}</strong>
 
   return (
-    <Box sx={{ mt: 8, mb: 8 }}>
+    <Box sx={{ mt: 8, mb: 8, backgroundColor:'secondary.light' }}>
       <>
 
         <Card sx={{ width: 1 }}>
           <CardHeader
             title={data?.name}
           />
+                  <Fab 
+           style={ { 
+            position: 'absolute',
+            right:4,
+           }} color="secondary" aria-label="add"
+           size='small'
+        onClick={handleClick}
+           >  
+            <input
+              style={{ display: "none" }}
+              type="file"
+              accept="image/png"
+              capture="environment"
+              ref={handleFileInput}
+              onChange={handleImageChange}
+            />
+            <Edit />
+           </Fab>
           <CardMedia
             component="img"
             height="194"
             image={imageObject?.imagePreview || data?.image}
             alt={data?.name}
-          />
+         />
+     
+          
+
           <CardContent>
             <Typography variant='h5'>
-              Numero: <Typography variant='body1' color="secondary">
+              Identificador: <Typography variant='body1' color="secondary">
                 {data?.number}
               </Typography>
             </Typography>
@@ -116,45 +139,12 @@ const CowDetail = () => {
 
         </Card>
 
-        <div>
-          <button onClick={handleClick}>Upload Photo</button>
-          <label>
-            <input
-              style={{ display: "none" }}
-              type="file"
-              accept="image/png"
-              capture="environment"
-              ref={handleFileInput}
-              onChange={handleImageChange}
-            />
-          </label>
-          {/* {imageObject && <Box sx={{ width: 1 }}>
-            <img width="100%" height="400" src={imageObject.imagePreview} alt="PreviewImaeg" />
-          </Box>} */}
-        </div>
-
+        
         <IconButton onClick={handleOpen} color="secondary" aria-label="add an alarm">
           <AddIcon />
         </IconButton>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-
-          <Box component="span" display="flex" flexDirection="row" justifyContent="center" alignItems="center">
-            <Box sx={{ width: 'auto', backgroundColor: 'white', p: 10, m: 4, }}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Text in a modal
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-              </Typography>
-            </Box>
-          </Box>
-
-        </Modal>
+        
+        <MilkForm cowId={id} open={open} handleClose={handleClose} />
         <MilkCollection id={id} />
       </></Box>
   );
