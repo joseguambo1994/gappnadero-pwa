@@ -74,7 +74,7 @@ const CowCreate =() => {
       error={errors.name ? true:false}
       {...register("name", { required: true })}/>
       
-      <TextField sx={{width: 1, mb:2}} label="Numero" color="secondary"  
+      <TextField sx={{width: 1, mb:2}} label="Identificador" color="secondary"  
       error={errors.name ? true:false}
       {...register("number", { required: true })}/>
 
