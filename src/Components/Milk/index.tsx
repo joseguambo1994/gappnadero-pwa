@@ -4,10 +4,8 @@ import { Timestamp, collection, getDocs } from "firebase/firestore";
 import Bottle from './Bottle';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-
-
-
-
+import { Box, Typography } from '@mui/material';
+import { KeyboardDoubleArrowDown } from '@mui/icons-material';
 
 interface Milk {
   id: string,
@@ -41,13 +39,44 @@ const MilkCollection = ({id}: Props)=>{
   if (error) return <strong>{'An error has occurred: ' + error}</strong>
 
   return (<div >
-  {
-    data?.map(item =>  
-     <Bottle width={item.liters} collectionDate={format(item.collectionDate.toDate(), 'MMM/dd/yyyy', { locale: es })}
-      />
-    
-    )
-  }
+  
+    <>
+    <Box sx={{
+      display:'flex',
+      flexDirection:'row',
+      pb:1,
+    }}>
+      <Typography
+      sx={{
+        flex:1,
+        textAlign:'center',
+      }}
+      variant='h5'
+      color={'white'}
+      >{'Fecha'}<KeyboardDoubleArrowDown /></Typography>
+      <Typography
+       sx={{
+        flex:2,
+        textAlign:'center'
+      }}
+      variant='h5'
+      color={'white'}
+      >{'Litros'}<KeyboardDoubleArrowDown  /></Typography>
+    </Box>
+    {
+      data && data.length > 0 ? data?.map(item =>  
+        <Bottle width={item.liters} collectionDate={format(item.collectionDate.toDate(), 'dd/MMM/yyyy', { locale: es })}
+         />
+     
+       ) : <Typography
+       sx={{
+        backgroundColor:'white'
+      }}
+      variant='body1'
+      >{'No se encontraron registros de leche'}</Typography>
+    }
+    </>
+  
   </div>
   );
 }

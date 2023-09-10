@@ -2,9 +2,8 @@ import { useQuery } from 'react-query';
 import { db, storage } from '../../firebase';
 import './styles.css';
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { Box, Card, CardContent, CardHeader, CardMedia, Fab, IconButton, Typography } from '@mui/material';
+import { Box, Card, CardContent, CardHeader, CardMedia, Fab, Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import AddIcon from '@mui/icons-material/Add';
 import MilkCollection from '../../Components/Milk';
 import { useState, useRef } from 'react';
 import { format } from 'date-fns';
@@ -13,9 +12,6 @@ import { ref, uploadBytes, getDownloadURL, } from "firebase/storage";
 import Loading from '../../Components/Loading';
 import { Edit } from '@mui/icons-material';
 import MilkForm from '../../Components/MilkForm';
-
-
-
 interface ICow {
   id: string,
   arrivedAt: Date,
@@ -86,7 +82,7 @@ const CowDetail = () => {
     <Box sx={{ mt: 8, mb: 8, backgroundColor:'secondary.light' }}>
       <>
 
-        <Card sx={{ width: 1 }}>
+        <Card sx={{ width: 1,   backgroundColor:'primary.light' }}>
           <CardHeader
             title={data?.name}
           />
@@ -138,12 +134,16 @@ const CowDetail = () => {
           </CardContent>
 
         </Card>
-
+          
+        <Box sx={{position: 'absolute', right:0, paddingRight:1,
+      paddingTop:4}}>
+        <Fab
+       
         
-        <IconButton onClick={handleOpen} color="secondary" aria-label="add an alarm">
-          <AddIcon />
-        </IconButton>
-        
+        variant="extended"  color="secondary" onClick={handleOpen}>
+  Crear
+</Fab>
+        </Box>
         <MilkForm cowId={id} open={open} handleClose={handleClose} />
         <MilkCollection id={id} />
       </></Box>

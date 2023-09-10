@@ -70,15 +70,15 @@ const CowCreate =() => {
           
           }}>
       
-      <TextField sx={{width: 1, mb:2}} label="Nombre" color="secondary"  
+      <TextField sx={{width: 1, mb:2, backgroundColor:'white'}} label="Nombre" color="secondary"  
       error={errors.name ? true:false}
       {...register("name", { required: true })}/>
       
-      <TextField sx={{width: 1, mb:2}} label="Identificador" color="secondary"  
+      <TextField sx={{width: 1, mb:2, backgroundColor:'white'}} label="Identificador" color="secondary"  
       error={errors.name ? true:false}
       {...register("number", { required: true })}/>
 
-      <TextField sx={{width: 1, mb:2}} label="Peso" color="secondary" 
+      <TextField sx={{width: 1, mb:2, backgroundColor:'white'}} label="Peso" color="secondary" 
         type="number" 
       error={errors.name ? true:false}
       {...register("weight", { required: true })}/>
@@ -91,7 +91,7 @@ const CowCreate =() => {
           render={({ field }) =>
               <DatePicker
               label="Fecha de ultimo celo"
-              sx={{width: 1, mb:2}}
+              sx={{width: 1, mb:2, backgroundColor:'white'}}
               onChange={(e) => field.onChange(e)}
               disableFuture
               />
@@ -105,7 +105,7 @@ const CowCreate =() => {
           render={({ field }) =>
               <DatePicker
               label="Fecha de arribo"
-              sx={{width: 1, mb:2}}
+              sx={{width: 1, mb:2, backgroundColor:'white'}}
               onChange={(e) => field.onChange(e)}
               disableFuture
               />
