@@ -9,6 +9,7 @@ import { useMutation } from 'react-query';
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../Components/Loading';
+import { companyStore } from '../../App';
 
 
 
@@ -32,9 +33,9 @@ const CowCreate =() => {
     formState: { errors },
     control
   } = useForm<Inputs>({defaultValues})
-
+  const company = companyStore((state) => state.company);
   const createCow = async (formData: Inputs) => {
-    await addDoc(collection(db, "cattle"), formData);
+    await addDoc(collection(db, 'companies', company, "cattle"), formData);
   }
   const { isSuccess , isLoading, isError, error, mutate } = useMutation(createCow);
 

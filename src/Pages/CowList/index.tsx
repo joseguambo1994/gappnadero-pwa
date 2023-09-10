@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { getPercentageHeat } from '../../Helpers/heat';
 import Loading from '../../Components/Loading';
 import CowListItem from '../../Components/CowListItem';
+import { companyStore } from '../../App';
 
 interface ICow {
   id: string,
@@ -21,11 +22,12 @@ interface ICow {
   lastHeat?: Timestamp,
 }
 const CowList = () => {
-
+  const user = companyStore((state) => state.company);
   const navigate = useNavigate();
 
   const getCattle = async () => {
-    const querySnapshot = await getDocs(collection(db, "cattle"));
+    if (!user) throw Error;
+    const querySnapshot = await getDocs(collection(db, "companies", user , "cattle"));
     const cows = querySnapshot.docs.map(doc => {
       const tempCow:ICow = {
         id: doc.id,
