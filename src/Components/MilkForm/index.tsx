@@ -5,6 +5,7 @@ import { DevTool } from "@hookform/devtools";
 import { db } from '../../firebase';
 import { useMutation } from 'react-query';
 import Loading from '../../Components/Loading';
+import { companyStore } from '../../App';
 
 type Inputs = {
   liters: number,
@@ -27,9 +28,10 @@ const MilkForm = ({cowId, open, handleClose}:Props) => {
     formState: { errors },
     control
   } = useForm<Inputs>({defaultValues})
+  const company = companyStore((state) => state.company);
 
   const createMilk = async (formData: Inputs) => {
-    const milkCollentionRef = collection(db, 'cattle', cowId, 'milk');
+    const milkCollentionRef = collection(db,'companies', company, 'cattle', cowId, 'milk');
     await addDoc(milkCollentionRef, formData);
   }
   const { isSuccess , isLoading, isError, error, mutate } = useMutation(createMilk);

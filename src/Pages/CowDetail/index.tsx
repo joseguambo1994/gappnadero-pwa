@@ -12,6 +12,8 @@ import { ref, uploadBytes, getDownloadURL, } from "firebase/storage";
 import Loading from '../../Components/Loading';
 import { Edit } from '@mui/icons-material';
 import MilkForm from '../../Components/MilkForm';
+import { companyStore } from '../../App';
+
 interface ICow {
   id: string,
   arrivedAt: Date,
@@ -24,13 +26,14 @@ interface ICow {
 
 const CowDetail = () => {
   const { state } = useLocation();
+  const company = companyStore((state) => state.company);
   const id = state?.id || undefined;
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [imageObject, setImageObject] = useState<any>(null);
   const handleFileInput = useRef<any>(null);
-  const storageRef = ref(storage, `/cattle/${id}/cow`);
+  const storageRef = ref(storage, `/companies/${company}/cattle/${id}/cow`);
 
   const handleClick = () => {
     handleFileInput?.current?.click();
@@ -44,7 +47,7 @@ const CowDetail = () => {
     try {
       const snapshot = await uploadBytes(storageRef, event.target.files[0]);
       const tempUrl = await getDownloadURL(snapshot.ref);
-      const cowRef = doc(db, "cattle", id);
+      const cowRef = doc(db,'companies', company, "cattle", id);
       await updateDoc(cowRef, {
         image: tempUrl
       });
@@ -55,7 +58,7 @@ const CowDetail = () => {
 
   const getCow = async () => {
     if (!id || id === '') return null
-    const docRef = doc(db, "cattle", id);
+    const docRef = doc(db,'companies', company, "cattle", id);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const tempCow: ICow = {

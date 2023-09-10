@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Box, Typography } from '@mui/material';
 import { KeyboardDoubleArrowDown } from '@mui/icons-material';
+import { companyStore } from '../../App';
 
 interface Milk {
   id: string,
@@ -16,8 +17,9 @@ interface Props {
   id: string,
 }
 const MilkCollection = ({id}: Props)=>{
+  const company = companyStore((state) => state.company);
   const getMilk = async () => {
-    const querySnapshot = await getDocs(collection(db, "cattle",id, 'milk'));
+    const querySnapshot = await getDocs(collection(db,'companies',company, "cattle",id, 'milk'));
     const milkCollection = querySnapshot.docs.map(doc => {
       const tempCow:Milk = {
         id: doc.id,

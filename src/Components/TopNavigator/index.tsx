@@ -7,14 +7,14 @@ import IconButton from '@mui/material/IconButton';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { STORAGE_KEY_ACCESS_TOKEN } from '../../constants';
-import { userStore } from '../../App';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Avatar, Menu, MenuItem } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
+import { companyStore } from '../../App';
 
 const MenuAppBar = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const logout = userStore((state) => state.logout);
+  const logout = companyStore((state) => state.logout);
   const navigate = useNavigate();
   const location = useLocation();
 

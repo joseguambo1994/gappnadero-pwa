@@ -24,9 +24,9 @@ import ProtectedRoute from './Components/ProtectedRoute';
 
 const queryClient = new QueryClient()
 
-interface UserState {
-  user: string | undefined,
-  setUser: (user: string) => void,
+interface CompanyState {
+  company: string,
+  setCompany: (company: string) => void,
   logout:  () => void,
 }
 
@@ -43,30 +43,26 @@ const theme = createTheme({
     },
 });
 
-export const userStore = create<UserState>((set) => ({
-  user: '',
-  setUser: (user) => set(() => ({ user: user })),
-  logout: () => set(() => ({ user: '' })),
+export const companyStore = create<CompanyState>((set) => ({
+  company: '',
+  setCompany: (company) => set(() => ({ company: company })),
+  logout: () => set(() => ({ company: '' })),
 }));
-export interface User {
-  id: string,
-  name: string,
-}
 
 const App = () => {
-  const setUser = userStore((state) => state.setUser);
-  const user = userStore((state) => state.user);
+  const setCompany = companyStore((state) => state.setCompany);
+  const company = companyStore((state) => state.company);
 
   useEffect(()=>{
     const getUser = ()=> {
       const storedUser = localStorage.getItem("@accessToken");
-      storedUser &&  setUser(storedUser)
+      storedUser &&  setCompany(storedUser)
     }
     getUser();
-  }, [user, setUser])
+  }, [company, setCompany])
 
 
-  console.log('user App.tsx', user)
+  console.log('company App.tsx', company)
   
   return (
     <ThemeProvider theme={theme}>
@@ -75,24 +71,24 @@ const App = () => {
        <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
     
-     { user &&  <MenuAppBar />}
+     { company &&  <MenuAppBar />}
 
       <Routes>
-        <Route index element={user ? <ProtectedRoute user={user}>
+        <Route index element={company ? <ProtectedRoute company={company}>
               <CowList />
             </ProtectedRoute>: <Login />} />
-        <Route path="/cowList" element={<ProtectedRoute user={user}>
+        <Route path="/cowList" element={<ProtectedRoute company={company}>
               <CowList />
             </ProtectedRoute>} />
-        <Route path="/cowDetail" element={<ProtectedRoute user={user}>
+        <Route path="/cowDetail" element={<ProtectedRoute company={company}>
               <CowDetail />
             </ProtectedRoute>} />
-        <Route path="/cowCreate" element={<ProtectedRoute user={user}>
+        <Route path="/cowCreate" element={<ProtectedRoute company={company}>
               <CowCreate />
             </ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
       </Routes>
-         {user && <BottomNavigator />}
+         {company && <BottomNavigator />}
       </QueryClientProvider>
     </div>
     </LocalizationProvider>
