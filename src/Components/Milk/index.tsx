@@ -16,7 +16,8 @@ interface Milk {
 interface Props {
   id: string,
 }
-const MilkCollection = ({id}: Props)=>{
+const MilkCollection = ({id,
+}: Props)=>{
   const company = companyStore((state) => state.company);
   const getMilk = async () => {
     const querySnapshot = await getDocs(collection(db,'companies',company, "cattle",id, 'milk'));
@@ -30,11 +31,10 @@ const MilkCollection = ({id}: Props)=>{
     });
     return milkCollection
   }
+    
 
 
   const { isLoading, error, data } = useQuery(['milk', id], getMilk)
-
-  console.log({data})
 
   if (isLoading) return <strong>{'Is Loadinggg ' + error}</strong>
 
@@ -66,7 +66,11 @@ const MilkCollection = ({id}: Props)=>{
       >{'Litros'}<KeyboardDoubleArrowDown  /></Typography>
     </Box>
     {
-      data && data.length > 0 ? data?.map(item =>  
+      data && data.length > 0 ? data?.sort((a,b) => {
+        if (a.collectionDate > b.collectionDate) return 1;
+        if (a.collectionDate < b.collectionDate) return -1;
+        return 0;
+      }).map(item =>  
         <Bottle width={item.liters} collectionDate={format(item.collectionDate.toDate(), 'dd/MMM/yyyy', { locale: es })}
          />
      

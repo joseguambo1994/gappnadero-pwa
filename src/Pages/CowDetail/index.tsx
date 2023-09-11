@@ -24,13 +24,18 @@ interface ICow {
   lastHeat?: Date
 }
 
+
 const CowDetail = () => {
   const { state } = useLocation();
   const company = companyStore((state) => state.company);
   const id = state?.id || undefined;
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
   const [imageObject, setImageObject] = useState<any>(null);
   const handleFileInput = useRef<any>(null);
   const storageRef = ref(storage, `/companies/${company}/cattle/${id}/cow`);
@@ -47,7 +52,7 @@ const CowDetail = () => {
     try {
       const snapshot = await uploadBytes(storageRef, event.target.files[0]);
       const tempUrl = await getDownloadURL(snapshot.ref);
-      const cowRef = doc(db,'companies', company, "cattle", id);
+      const cowRef = doc(db, 'companies', company, "cattle", id);
       await updateDoc(cowRef, {
         image: tempUrl
       });
@@ -58,7 +63,7 @@ const CowDetail = () => {
 
   const getCow = async () => {
     if (!id || id === '') return null
-    const docRef = doc(db,'companies', company, "cattle", id);
+    const docRef = doc(db, 'companies', company, "cattle", id);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const tempCow: ICow = {
@@ -77,26 +82,26 @@ const CowDetail = () => {
   const { isLoading, error, data } = useQuery('cow', getCow)
 
 
-  if (isLoading) return  <Loading />
+  if (isLoading) return <Loading />
 
   if (error) return <strong>{'An error has occurred: ' + error}</strong>
 
   return (
-    <Box sx={{ mt: 8, mb: 8, backgroundColor:'secondary.light' }}>
+    <Box sx={{ mt: 8, mb: 8, backgroundColor: 'secondary.light' }}>
       <>
 
-        <Card sx={{ width: 1,   backgroundColor:'primary.light' }}>
+        <Card sx={{ width: 1, backgroundColor: 'primary.light' }}>
           <CardHeader
             title={data?.name}
           />
-                  <Fab 
-           style={ { 
-            position: 'absolute',
-            right:4,
-           }} color="secondary" aria-label="add"
-           size='small'
-        onClick={handleClick}
-           >  
+          <Fab
+            style={{
+              position: 'absolute',
+              right: 4,
+            }} color="secondary" aria-label="add"
+            size='small'
+            onClick={handleClick}
+          >
             <input
               style={{ display: "none" }}
               type="file"
@@ -106,16 +111,13 @@ const CowDetail = () => {
               onChange={handleImageChange}
             />
             <Edit />
-           </Fab>
+          </Fab>
           <CardMedia
             component="img"
             height="194"
             image={imageObject?.imagePreview || data?.image}
             alt={data?.name}
-         />
-     
-          
-
+          />
           <CardContent>
             <Typography variant='h5'>
               Identificador: <Typography variant='body1' color="secondary">
@@ -135,20 +137,18 @@ const CowDetail = () => {
               </Typography>
             }
           </CardContent>
-
         </Card>
-          
-        <Box sx={{position: 'absolute', right:0, paddingRight:1,
-      paddingTop:4}}>
-        <Fab
-       
-        
-        variant="extended"  color="secondary" onClick={handleOpen}>
-  Crear
-</Fab>
+        <Box sx={{
+          position: 'absolute', right: 0, paddingRight: 1,
+          paddingTop: 4
+        }}>
+          <Fab variant="extended" color="secondary" onClick={handleOpen}> Crear
+          </Fab>
         </Box>
         <MilkForm cowId={id} open={open} handleClose={handleClose} />
-        <MilkCollection id={id} />
+       {
+        !open &&  <MilkCollection id={id} />
+       }
       </></Box>
   );
 }

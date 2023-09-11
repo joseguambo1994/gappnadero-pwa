@@ -1,11 +1,11 @@
-import { Box, Button, Modal, TextField } from '@mui/material';
+import { Box, Button, CircularProgress, Modal, TextField } from '@mui/material';
 import { Timestamp, collection, addDoc}  from "firebase/firestore";
 import { useForm, SubmitHandler } from "react-hook-form"
 import { DevTool } from "@hookform/devtools";
 import { db } from '../../firebase';
 import { useMutation } from 'react-query';
-import Loading from '../../Components/Loading';
 import { companyStore } from '../../App';
+
 
 type Inputs = {
   liters: number,
@@ -37,7 +37,8 @@ const MilkForm = ({cowId, open, handleClose}:Props) => {
   const { isSuccess , isLoading, isError, error, mutate } = useMutation(createMilk);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    mutate({...data, collectionDate: data.collectionDate });
+    mutate({...data, collectionDate: data.collectionDate })
+    handleClose();
   }
 
 
@@ -51,7 +52,7 @@ const MilkForm = ({cowId, open, handleClose}:Props) => {
 
     <Box component="span" display="flex" flexDirection="row" justifyContent="center" alignItems="center">
       <Box sx={{ width: 'auto', backgroundColor: 'white', p: 10, m: 4, }}>
-      {isLoading ? (<Loading />
+      {isLoading ? (<CircularProgress color="secondary" />
       ) : (
         <>
           {isError ? (
