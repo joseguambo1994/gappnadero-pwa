@@ -7,6 +7,7 @@ import { es } from 'date-fns/locale';
 import { Box, Typography } from '@mui/material';
 import { KeyboardDoubleArrowDown } from '@mui/icons-material';
 import { companyStore } from '../../App';
+import { sortMilkCollectionByDate } from '../../Helpers/milk/milk';
 
 interface Milk {
   id: string,
@@ -35,6 +36,7 @@ const MilkCollection = ({id,
 
 
   const { isLoading, error, data } = useQuery(['milk', id], getMilk)
+  console.log("Milk data", data)
 
   if (isLoading) return <strong>{'Is Loadinggg ' + error}</strong>
 
@@ -66,12 +68,9 @@ const MilkCollection = ({id,
       >{'Litros'}<KeyboardDoubleArrowDown  /></Typography>
     </Box>
     {
-      data && data.length > 0 ? data?.sort((a,b) => {
-        if (a.collectionDate > b.collectionDate) return 1;
-        if (a.collectionDate < b.collectionDate) return -1;
-        return 0;
-      }).map(item =>  
-        <Bottle width={item.liters} collectionDate={format(item.collectionDate.toDate(), 'dd/MMM/yyyy', { locale: es })}
+      data && data.length > 0 ? sortMilkCollectionByDate(data).map(item =>  
+        <Bottle width={item.liters} collectionDate={format(new Date(item.collectionDate.seconds 
+          * 1000 + item.collectionDate.nanoseconds/1000000), 'dd/MMM/yyyy', { locale: es })}
          />
      
        ) : <Typography
