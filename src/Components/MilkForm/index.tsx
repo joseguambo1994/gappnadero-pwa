@@ -32,7 +32,8 @@ const MilkForm = ({cowId, open, handleClose}:Props) => {
 
   const createMilk = async (formData: Inputs) => {
     const milkCollentionRef = collection(db,'companies', company, 'cattle', cowId, 'milk');
-    await addDoc(milkCollentionRef, formData);
+    const tempMilk = {...formData, liters: Number(formData.liters)}
+    await addDoc(milkCollentionRef, tempMilk);
   }
   const { isSuccess , isLoading, isError, error, mutate } = useMutation(createMilk);
 
