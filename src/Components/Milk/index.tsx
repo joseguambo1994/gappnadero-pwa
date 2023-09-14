@@ -7,6 +7,7 @@ import { es } from 'date-fns/locale';
 import { Box, Typography } from '@mui/material';
 import { KeyboardDoubleArrowDown } from '@mui/icons-material';
 import { companyStore } from '../../App';
+import _ from 'lodash';
 
 interface Milk {
   id: string,
@@ -15,8 +16,9 @@ interface Milk {
 }
 interface Props {
   id: string,
+  refetchMilk: boolean,
 }
-const MilkCollection = ({id}: Props)=>{
+const MilkCollection = ({id, refetchMilk}: Props)=>{
   const company = companyStore((state) => state.company);
   const getMilk = async () => {
     const querySnapshot = await getDocs(collection(db,'companies',company, "cattle",id, 'milk'));
@@ -32,9 +34,11 @@ const MilkCollection = ({id}: Props)=>{
   }
 
 
-  const { isLoading, error, data } = useQuery(['milk', id], getMilk)
-
+  const { isLoading, error, data, refetch } = useQuery(['milk', id], getMilk)
   console.log({data})
+
+  _.isBoolean(refetchMilk) && refetch();
+  const maxLiters = data? Math.max(...data?.map(item => item.liters)) : 35;
 
   if (isLoading) return <strong>{'Is Loadinggg ' + error}</strong>
 
@@ -66,8 +70,14 @@ const MilkCollection = ({id}: Props)=>{
       >{'Litros'}<KeyboardDoubleArrowDown  /></Typography>
     </Box>
     {
-      data && data.length > 0 ? data?.map(item =>  
-        <Bottle width={item.liters} collectionDate={format(item.collectionDate.toDate(), 'dd/MMM/yyyy', { locale: es })}
+      data && data?.length > 0 ? data?.sort((a,b)=>{
+        if (a.collectionDate < b.collectionDate) return 1;
+        if (a.collectionDate >= b.collectionDate) return -1;
+        return 0
+      }).map(item =>  
+        <Bottle width={item.liters}
+        maxLiters={maxLiters}
+        collectionDate={format(item.collectionDate.toDate(), 'dd/MMM/yyyy', { locale: es })}
          />
      
        ) : <Typography

@@ -30,6 +30,11 @@ interface CompanyState {
   logout:  () => void,
 }
 
+interface MilkState {
+  refetch: boolean,
+  setRefetch:  () => void,
+}
+
 const theme = createTheme({
     palette: {
       primary: {
@@ -47,6 +52,11 @@ export const companyStore = create<CompanyState>((set) => ({
   company: '',
   setCompany: (company) => set(() => ({ company: company })),
   logout: () => set(() => ({ company: '' })),
+}));
+
+export const milkStore = create<MilkState>((set) => ({
+  refetch: false,
+  setRefetch: () => set((state) => ({ refetch: !state.refetch })),
 }));
 
 const App = () => {

@@ -7,10 +7,11 @@ import './styles.css';
 interface Props {
   width: number,
   collectionDate: string,
+  maxLiters:number,
 }
-const Bottle = ({ width, collectionDate }: Props) => {
+const Bottle = ({ width, collectionDate, maxLiters }: Props) => {
   const [open, setOpen] = useState(false)
-  const widthFactor = width * 100 / 35
+  const widthFactor = width * 90 / maxLiters
   const animationStyle = useSpring({
     width: open ? `${widthFactor}%` : '0%',
 
