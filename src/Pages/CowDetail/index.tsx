@@ -24,6 +24,7 @@ interface ICow {
   lastHeat?: Date
 }
 
+
 const CowDetail = () => {
   const { state } = useLocation();
   const company = companyStore((state) => state.company);
@@ -32,7 +33,11 @@ const CowDetail = () => {
   const id = state?.id || undefined;
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
   const [imageObject, setImageObject] = useState<any>(null);
   const handleFileInput = useRef<any>(null);
   const storageRef = ref(storage, `/companies/${company}/cattle/${id}/cow`);
@@ -115,7 +120,6 @@ const CowDetail = () => {
             image={imageObject?.imagePreview || data?.image}
             alt={data?.name}
           />
-
           <CardContent>
             <Typography variant='h5'>
               Identificador: <Typography variant='body1' color="secondary">
@@ -135,9 +139,7 @@ const CowDetail = () => {
               </Typography>
             }
           </CardContent>
-
         </Card>
-
         <Box sx={{
           position: 'absolute', right: 0, paddingRight: 1,
           paddingTop: 4

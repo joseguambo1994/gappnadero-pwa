@@ -7,6 +7,7 @@ import { useMutation } from 'react-query';
 import { companyStore, milkStore } from '../../App';
 import { DatePicker } from '@mui/x-date-pickers';
 
+
 type Inputs = {
   liters: number,
   collectionDate: Timestamp,
@@ -35,7 +36,8 @@ const MilkForm = ({cowId, open, handleClose}:Props) => {
 
   const createMilk = async (formData: Inputs) => {
     const milkCollentionRef = collection(db,'companies', company, 'cattle', cowId, 'milk');
-    await addDoc(milkCollentionRef, formData);
+    const tempMilk = {...formData, liters: Number(formData.liters)}
+    await addDoc(milkCollentionRef, tempMilk);
   }
   const { isSuccess , isLoading, isError, error, mutate } = useMutation(createMilk);
 
