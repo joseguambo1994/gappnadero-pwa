@@ -12,7 +12,7 @@ import { ref, uploadBytes, getDownloadURL, } from "firebase/storage";
 import Loading from '../../Components/Loading';
 import { Edit } from '@mui/icons-material';
 import MilkForm from '../../Components/MilkForm';
-import { companyStore } from '../../App';
+import { companyStore, milkStore } from '../../App';
 
 interface ICow {
   id: string,
@@ -28,6 +28,8 @@ interface ICow {
 const CowDetail = () => {
   const { state } = useLocation();
   const company = companyStore((state) => state.company);
+  const refetch = milkStore((state) => state.refetch);
+
   const id = state?.id || undefined;
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -142,13 +144,13 @@ const CowDetail = () => {
           position: 'absolute', right: 0, paddingRight: 1,
           paddingTop: 4
         }}>
-          <Fab variant="extended" color="secondary" onClick={handleOpen}> Crear
+          <Fab
+            variant="extended" color="secondary" onClick={handleOpen}>
+            Crear
           </Fab>
         </Box>
         <MilkForm cowId={id} open={open} handleClose={handleClose} />
-       {
-        !open &&  <MilkCollection id={id} />
-       }
+        <MilkCollection id={id} refetchMilk={refetch} />
       </></Box>
   );
 }
